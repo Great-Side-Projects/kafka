@@ -31,8 +31,8 @@ jobs:
         SPRING_SECURITY_USER_PASSWORD: ${{ secrets.SPRING_SECURITY_USER_PASSWORD }}
         
       run: |
-        # Transferir el archivo kafka-compose.yml a la VM
-        scp -o StrictHostKeyChecking=no -i azure_vm_ssh_key -r kafka-compose.yml $AZURE_VM_USERNAME@$AZURE_VM_IP:
+        # Transferir el archivo kafka-compose.yaml a la VM
+        scp -o StrictHostKeyChecking=no -i azure_vm_ssh_key -r kafka-compose.yaml $AZURE_VM_USERNAME@$AZURE_VM_IP:
 
         # Conectar y ejecutar comandos en la VM
         ssh -o StrictHostKeyChecking=no -i azure_vm_ssh_key $AZURE_VM_USERNAME@$AZURE_VM_IP << 'EOF'
