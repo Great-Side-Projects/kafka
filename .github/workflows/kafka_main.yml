@@ -44,6 +44,6 @@ jobs:
           echo "SPRING_SECURITY_USER_PASSWORD=${{ secrets.SPRING_SECURITY_USER_PASSWORD }}" >> .env
 
           # Levantar los servicios con Docker Compose
-          docker-compose -f kafka-compose.yaml down
-          docker-compose -f kafka-compose.yaml up -d
+          docker compose -f kafka-compose.yaml down
+          docker compose -f kafka-compose.yaml up -d
         EOF
