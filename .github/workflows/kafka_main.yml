@@ -25,10 +25,10 @@ jobs:
       env:
         AZURE_VM_IP: ${{ secrets.AZURE_VM_IP }}
         AZURE_VM_USERNAME: ${{ secrets.AZURE_VM_USERNAME }}
-        KAFKA_CLIENT_USERS: ${{ secrets.KAFKA_CLIENT_USERS }}
-        KAFKA_CLIENT_PASSWORDS: ${{ secrets.KAFKA_CLIENT_PASSWORDS }}
-        SPRING_SECURITY_USER_NAME: ${{ secrets.SPRING_SECURITY_USER_NAME }}
-        SPRING_SECURITY_USER_PASSWORD: ${{ secrets.SPRING_SECURITY_USER_PASSWORD }}
+        KAFKA_CLIENT_USERS: 
+        KAFKA_CLIENT_PASSWORDS: 
+        SPRING_SECURITY_USER_NAME: 
+        SPRING_SECURITY_USER_PASSWORD: 
         
       run: |
         # Transferir el archivo kafka-compose.yaml a la VM
@@ -39,10 +39,10 @@ jobs:
         
           # Crear un archivo .env con las variables de entorno
           cat <<EOT > .env
-          KAFKA_CLIENT_USERS=${KAFKA_CLIENT_USERS}
-          KAFKA_CLIENT_PASSWORDS=${KAFKA_CLIENT_PASSWORDS}
-          SPRING_SECURITY_USER_NAME=${SPRING_SECURITY_USER_NAME}
-          SPRING_SECURITY_USER_PASSWORD=${SPRING_SECURITY_USER_PASSWORD}
+          KAFKA_CLIENT_USERS=${{ secrets.KAFKA_CLIENT_USERS }}
+          KAFKA_CLIENT_PASSWORDS=${{ secrets.KAFKA_CLIENT_PASSWORDS }}
+          SPRING_SECURITY_USER_NAME=${{ secrets.SPRING_SECURITY_USER_NAME }}
+          SPRING_SECURITY_USER_PASSWORD=${{ secrets.SPRING_SECURITY_USER_PASSWORD }}
           EOT
 
           # Levantar los servicios con Docker Compose
