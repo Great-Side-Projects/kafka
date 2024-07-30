@@ -61,8 +61,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot-UI]](https://authsp.azurewebsites.net/)
-[![Product Name Screen Shot2][product-screenshot-UI2]](https://authsp.azurewebsites.net/)
+[![Product Name Screen Shot][product-screenshot-UI]](http://20.64.115.37:8090/auth)
+[![Product Name Screen Shot2][product-screenshot-UI2]](http://20.64.115.37:8090/auth)
 I am using Kafka to my side projects to improve the arquitecture software. Kafka deployment with docker-compose SASL and KAfka UI authentication, this project is how to deploy a Kafka cluster with SASL authentication and Kafka UI with docker-compose in a VM Azure or local environment.   
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
