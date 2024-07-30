@@ -26,10 +26,6 @@ jobs:
       env:
         AZURE_VM_IP: ${{ secrets.AZURE_VM_IP }}
         AZURE_VM_USERNAME: ${{ secrets.AZURE_VM_USERNAME }}
-        KAFKA_CLIENT_USERS: 
-        KAFKA_CLIENT_PASSWORDS: 
-        SPRING_SECURITY_USER_NAME: 
-        SPRING_SECURITY_USER_PASSWORD: 
         
       run: |
         # Transferir el archivo kafka-compose.yaml a la VM
