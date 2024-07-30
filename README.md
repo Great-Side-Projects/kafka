@@ -12,7 +12,7 @@
     <img src="https://kafka.apache.org/logos/kafka_logo--simple.png" alt="Logo" width="400" height="">
   </a>
 
-  <h3 align="center">Keycloak</h3>
+  <h3 align="center">Kafka</h3>
 
   <p align="center">
   Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.
@@ -63,7 +63,7 @@
 
 [![Product Name Screen Shot][product-screenshot-UI]](https://authsp.azurewebsites.net/)
 [![Product Name Screen Shot2][product-screenshot-UI2]](https://authsp.azurewebsites.net/)
-I am using Kafka to my side projects to improve the arquitecture od software. Kafka deployment with docker-compose SASL and KAfka UI authentication, this project is how to deploy a Kafka cluster with SASL authentication and Kafka UI with docker-compose in a VM Azure or local environment.   
+I am using Kafka to my side projects to improve the arquitecture software. Kafka deployment with docker-compose SASL and KAfka UI authentication, this project is how to deploy a Kafka cluster with SASL authentication and Kafka UI with docker-compose in a VM Azure or local environment.   
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -145,7 +145,8 @@ This is an example of how to list things you need to use the software and how to
         SPRING_SECURITY_USER_NAME: admin #user for the kafka ui
         SPRING_SECURITY_USER_PASSWORD: admin #password for the kafka ui
     ```
-8. if you want to authenticate you client to kafka cluster with SASL, you have set the configuration in the client java, .net or python.  
+8. if you want to authenticate you client to kafka cluster with SASL, you have set the configuration in the client java, .net, python, etc. 
+
     ```yaml
     kafka:
       bootstrap-servers: localhost:9092
