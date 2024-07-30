@@ -6,6 +6,7 @@ on:
       - main
     paths-ignore:
       - '**/README.md'
+      - '**/kafka-compose-local.yaml'
   workflow_dispatch:
 
 jobs:
