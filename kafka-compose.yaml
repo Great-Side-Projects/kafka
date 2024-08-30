@@ -126,7 +126,7 @@ services:
     depends_on:
       - kafka
     ports:
-      - "18083:8083"
+      - "28083:8083"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: kafka:19092
       CONNECT_REST_PORT: 8083

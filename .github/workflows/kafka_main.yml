@@ -60,8 +60,11 @@ jobs:
           # Crear el archivo login.properties control center usando variables de entorno
           echo "${{ vars.LOGIN_PROPERTIES }}" > login.properties
           sudo mv login.properties etc/
+          cd etc
+          chmod 644 auth.jaas login.properties
+          cd ..
 
           # Levantar los servicios con Docker Compose
-          #docker compose -f kafka-compose.yaml stop
-          #docker compose -f kafka-compose.yaml up -d
+          docker compose -f kafka-compose.yaml stop
+          docker compose -f kafka-compose.yaml up -d
         EOF
