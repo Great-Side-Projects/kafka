@@ -116,6 +116,7 @@ services:
       CONTROL_CENTER_REST_AUTHENTICATION_ROLES: Administrators,Restricted
       CONTROL_CENTER_AUTH_RESTRICTED_ROLES: Restricted
       CONTROL_CENTER_OPTS: "-Djava.security.auth.login.config=/etc/confluent-control-center/auth.jaas"
+    restart: unless-stopped
     volumes:
       - ./etc/auth.jaas:/etc/confluent-control-center/auth.jaas
       - ./etc/login.properties:/etc/confluent-control-center/login.properties
@@ -148,6 +149,7 @@ services:
       CONNECT_PRODUCER_INTERCEPTOR_CLASSES: io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
       CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components'
+    restart: unless-stopped
     command:
       - bash
       - -c
