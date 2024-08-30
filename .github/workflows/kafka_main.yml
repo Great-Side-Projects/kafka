@@ -63,7 +63,7 @@ jobs:
           cd etc
           chmod 644 auth.jaas login.properties
           cd ..
-
+          
           # Levantar los servicios con Docker Compose
           docker compose -f kafka-compose.yaml stop
           docker compose -f kafka-compose.yaml up -d
