@@ -52,6 +52,6 @@ jobs:
           sudo mv login.properties etc/
 
           # Levantar los servicios con Docker Compose
-          docker compose -f kafka-compose.yaml stop
-          docker compose -f kafka-compose.yaml up -d
+          #docker compose -f kafka-compose.yaml stop
+          #docker compose -f kafka-compose.yaml up -d
         EOF
