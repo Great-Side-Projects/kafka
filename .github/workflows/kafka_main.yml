@@ -48,8 +48,10 @@ jobs:
           echo "SPRING_SECURITY_USER_PASSWORD=${{ secrets.SPRING_SECURITY_USER_PASSWORD }}" >> .env
           
           # Crear el archivo login.properties control center usando variables de entorno
-          echo "${{ vars.LOGIN_PROPERTIES }}" > etc/login.properties
-         
+          cd etc
+          echo "${{ vars.LOGIN_PROPERTIES }}" > login.properties
+          cd .. 
+
           # Levantar los servicios con Docker Compose
           docker compose -f kafka-compose.yaml stop
           docker compose -f kafka-compose.yaml up -d
