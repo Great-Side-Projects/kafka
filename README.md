@@ -63,6 +63,22 @@
 
 [![Product Name Screen Shot][product-screenshot-UI]](http://20.64.115.37:8090/auth)
 [![Product Name Screen Shot2][product-screenshot-UI2]](http://20.64.115.37:8090/auth)
+
+Control Center:
+
+[![Product Name Screen Shot3][product-screenshot-UI3]](http://20.64.115.37:9021/clusters)
+
+Kafka-Connect:
+
+[![Product Name Screen Shot4][product-screenshot-UI4]](http://20.64.115.37:9021/clusters)
+
+Kafka-Ksqldb:
+
+[![Product Name Screen Shot5][product-screenshot-UI5]](http://20.64.115.37:9021/clusters)
+
+Kafka-Schema-Registry:
+
+[![Product Name Screen Shot6][product-screenshot-UI6]](http://20.64.115.37:9021/clusters)
 I am using Kafka to my side projects to improve the arquitecture software. Kafka deployment with docker-compose SASL and KAfka UI authentication, this project is how to deploy a Kafka cluster with SASL authentication and Kafka UI with docker-compose in a VM Azure or local environment.   
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -130,6 +146,20 @@ This is an example of how to list things you need to use the software and how to
       SPRING_SECURITY_USER_NAME: admin #user for the kafka ui
       SPRING_SECURITY_USER_PASSWORD: admin #password for the kafka ui
    ```
+  for access to Control Center, go a folder `etc/login.properties` and set user and password for the control center. `http://localhost:9021/` 
+
+   ```sh
+    cd etc
+    cat login.properties
+    
+    #content of the file
+    admin: admin,Administrators
+    guest: guest,Restricted
+    
+    #user: password,role
+  
+    #if you want to add more users, you can add more users with the following format
+    ```
 
 4. Create the docker-compose with the following command
  
@@ -145,7 +175,7 @@ This is an example of how to list things you need to use the software and how to
         SPRING_SECURITY_USER_NAME: admin #user for the kafka ui
         SPRING_SECURITY_USER_PASSWORD: admin #password for the kafka ui
     ```
-8. if you want to authenticate you client to kafka cluster with SASL, you have set the configuration in the client java, .net, python, etc. 
+7. if you want to authenticate you client to kafka cluster with SASL, you have set the configuration in the client java, .net, python, etc. 
 
     ```yaml
     kafka:
@@ -156,7 +186,10 @@ This is an example of how to list things you need to use the software and how to
       security:
         protocol: SASL_PLAINTEXT #SASL_SSL or PLAINTEXT
     ```
-7. Enjoy!
+8. yeah! there are two UIs to manage the kafka cluster, Control Center and Kafka UI. 
+    - Control Center: `http://localhost:9021/` (favorite)
+    - Kafka UI: `http://localhost:8090/`
+9. Enjoy!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -166,7 +199,8 @@ This is an example of how to list things you need to use the software and how to
 ## Usage
 
 ### Easy way:
-Go to `http://localhost:8090/` and you can see the UI to manage the kafka.
+- Go to `http://localhost:8090/` and you can see the UI to manage the kafka.
+- Go to `http://localhost:9021/` and you can see the Control Center to manage the kafka.
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -178,6 +212,12 @@ Go to `http://localhost:8090/` and you can see the UI to manage the kafka.
 - [x] Implement Docker compose for deployment
 - [x] Implement CI/CD with GitHub Actions
 - [x] Implement VM Azure for deployment
+- [x] Implement SASL authentication
+- [x] Implement Kafka UI
+- [x] Implement Control Center
+- [x] Implement Kafka Connect
+- [x] Implement Kafka KSQLDB
+- [x] Implement Kafka Schema Registry
 - [ ] Implement SSO with Keycloak
 
 See the [open issues](https://github.com/Great-Side-Projects/kafka/issues) for a full list of proposed features (and known issues).
@@ -258,6 +298,10 @@ Project Link: [https://github.com/Great-Side-Projects/kafka](https://github.com/
 [architecture-diagram]: images/kafka-Architecture-Design.drawio.png
 [AzureVM]: https://img.shields.io/badge/Azure%20VM-0089D6?style=for-the-badge&logo=microsoft-azure&logoColor=white
 [product-screenshot-UI2]: images/screenshotUI2.png
+[product-screenshot-UI3]: images/screenshotUI3.png
+[product-screenshot-UI4]: images/screenshotUI4.png
+[product-screenshot-UI5]: images/screenshotUI5.png
+[product-screenshot-UI6]: images/screenshotUI6.png
 
 
 
