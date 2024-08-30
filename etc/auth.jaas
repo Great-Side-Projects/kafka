@@ -1,0 +1,4 @@
+ControlCenter {
+    org.eclipse.jetty.jaas.spi.PropertyFileLoginModule required
+    file="/etc/confluent-control-center/login.properties";
+};

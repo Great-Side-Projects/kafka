@@ -28,8 +28,12 @@ jobs:
         AZURE_VM_USERNAME: ${{ secrets.AZURE_VM_USERNAME }}
         
       run: |
+        # Conectar y crear la carpeta /etc si no existe
+        ssh -o StrictHostKeyChecking=no -i azure_vm_ssh_key $AZURE_VM_USERNAME@$AZURE_VM_IP "sudo mkdir -p /etc"
+
         # Transferir el archivo kafka-compose.yaml a la VM
         scp -o StrictHostKeyChecking=no -i azure_vm_ssh_key -r kafka-compose.yaml $AZURE_VM_USERNAME@$AZURE_VM_IP:
+        scp -o StrictHostKeyChecking=no -i azure_vm_ssh_key -r /etc/auth.jaas $AZURE_VM_USERNAME@$AZURE_VM_IP:/etc/
 
         # Conectar y ejecutar comandos en la VM
         ssh -o StrictHostKeyChecking=no -i azure_vm_ssh_key $AZURE_VM_USERNAME@$AZURE_VM_IP << 'EOF'
@@ -39,8 +43,11 @@ jobs:
           echo "KAFKA_CLIENT_PASSWORDS=${{ secrets.KAFKA_CLIENT_PASSWORDS }}" >> .env
           echo "SPRING_SECURITY_USER_NAME=${{ secrets.SPRING_SECURITY_USER_NAME }}" >> .env
           echo "SPRING_SECURITY_USER_PASSWORD=${{ secrets.SPRING_SECURITY_USER_PASSWORD }}" >> .env
-
+          
+          # Crear el archivo login.properties control center usando variables de entorno
+          echo "${{ vars.LOGIN_PROPERTIES }}" > /etc/login.properties
+         
           # Levantar los servicios con Docker Compose
-          docker compose -f kafka-compose.yaml down
+          docker compose -f kafka-compose.yaml stop
           docker compose -f kafka-compose.yaml up -d
         EOF

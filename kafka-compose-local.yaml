@@ -22,24 +22,153 @@ services:
       KAFKA_CFG_SASL_ENABLED_MECHANISMS: PLAIN
       KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
-      KAFKA_CLIENT_USERS: app1
-      KAFKA_CLIENT_PASSWORDS: app1pass
+      KAFKA_CLIENT_USERS: app1,app2
+      KAFKA_CLIENT_PASSWORDS: app1pass,app2pass
     ports:
       - 9092:9092
     depends_on:
       - zookeeper
+    volumes:
+      - kafka-data:/bitnami/kafka
     
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.7.0
+    container_name: schema-registry
+    depends_on:
+      - kafka
+    ports:
+      - "8086:8086"
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:19092
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8086"
+    volumes:
+      - schema-registry-data:/var/lib/schema-registry
+
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
     depends_on:
       - kafka
+      - schema-registry
+      - ksqldb-server
+      - kafka-connect
     ports:
       - 8090:8080
     environment:
       KAFKA_CLUSTERS_0_NAME: cluster_dev
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:19092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      KAFKA_CLUSTERS_0_KSQLDBSERVER: http://ksqldb-server:8088
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8086
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://kafka-connect:8083
       AUTH_TYPE: "LOGIN_FORM"
       SPRING_SECURITY_USER_NAME: admin
       SPRING_SECURITY_USER_PASSWORD: admin
+
+  ksqldb-server:
+      image: confluentinc/cp-ksqldb-server:7.7.0
+      container_name: ksqldb-server
+      depends_on:
+        - kafka
+      ports:
+        - "8088:8088"
+      environment:
+        KSQL_BOOTSTRAP_SERVERS: kafka:19092
+        KSQL_KSQL_SERVICE_ID: "ksql-service"
+        KSQL_LISTENERS: "http://0.0.0.0:8088"
+        KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8086"
+        KSQL_KSQL_CONNECT_URL: "http://kafka-connect:8083"
+      volumes:
+        - ksqldb-server-data:/var/lib/ksqldb-server
+        
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:7.7.0
+    container_name: control-center
+    depends_on:
+      - kafka
+      - schema-registry
+      - ksqldb-server
+      - kafka-connect
+    ports:
+      - 9021:9021
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: kafka:19092
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONTROL_CENTER_KSQL_KSQLDB_URL: "http://ksqldb-server:8088"
+      CONTROL_CENTER_KSQL_KSQLDB_ADVERTISED_URL: "http://localhost:8088"
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8086"
+      CONTROL_CENTER_CONNECT_GROUP_ID: "control-center"
+      CONTROL_CENTER_CONNECT_CONNECT-DEFAULT_CLUSTER: http://kafka-connect:8083
+      CONTROL_CENTER_CONNECT_HEALTHCHECK_ENDPOINT: '/connectors'
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONFLUENT_SUPPORT_METRICS_ENABLE: true
+      KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: true
+      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: true
+      # Autenticación básica HTTP
+      CONTROL_CENTER_REST_AUTHENTICATION_METHOD: BASIC
+      CONTROL_CENTER_REST_AUTHENTICATION_REALM: ControlCenter
+      CONTROL_CENTER_REST_AUTHENTICATION_ROLES: Administrators,Restricted
+      CONTROL_CENTER_AUTH_RESTRICTED_ROLES: Restricted
+      CONTROL_CENTER_OPTS: "-Djava.security.auth.login.config=/etc/confluent-control-center/auth.jaas"
+    volumes:
+      - ./etc/auth.jaas:/etc/confluent-control-center/auth.jaas
+      - ./etc/login.properties:/etc/confluent-control-center/login.properties
+      
+  kafka-connect:
+    image: confluentinc/cp-kafka-connect:7.7.0
+    container_name: kafka-connect
+    depends_on:
+      - kafka
+    ports:
+      - "18083:8083"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: kafka:19092
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: compose-connect-group
+      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+      CONNECT_KEY_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8086'
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8086'
+      CONNECT_INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+      CONNECT_PRODUCER_INTERCEPTOR_CLASSES: io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
+      CONNECT_CONSUMER_INTERCEPTOR_CLASSES: io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
+      CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components'
+    command:
+      - bash
+      - -c
+      - |
+        echo "Installing connector plugins last version"
+        confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
+        confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:latest
+        confluent-hub install --no-prompt confluentinc/kafka-connect-s3:latest
+        confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
+        confluent-hub install --no-prompt confluentinc/kafka-connect-azure-blob-storage:latest
+        confluent-hub install --no-prompt confluentinc/kafka-connect-gcs:latest
+        confluent-hub install --no-prompt confluentinc/kafka-connect-jms:latest
+        confluent-hub install --no-prompt confluentinc/kafka-connect-mqtt:latest
+        confluent-hub install --no-prompt confluentinc/kafka-connect-sftp:latest
+        confluent-hub install --no-prompt confluentinc/kafka-connect-syslog:latest
+        confluent-hub install --no-prompt confluentinc/kafka-connect-vertica:latest
+        #
+        echo "Launching Kafka Connect worker"
+        /etc/confluent/docker/run &
+        #
+        sleep infinity
+    volumes:
+      - kafka-connect-data:/var/lib/kafka-connect
+
+volumes:
+  schema-registry-data: 
+  ksqldb-server-data:
+  kafka-connect-data:
+  kafka-data:
