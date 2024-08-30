@@ -117,8 +117,8 @@ services:
       CONTROL_CENTER_AUTH_RESTRICTED_ROLES: Restricted
       CONTROL_CENTER_OPTS: "-Djava.security.auth.login.config=/etc/confluent-control-center/auth.jaas"
     volumes:
-      - ./etc/auth.jaas:/etc/confluent-control-center/auth.jaas
-      - ./etc/login.properties:/etc/confluent-control-center/login.properties
+      - /etc/auth.jaas:/etc/confluent-control-center/auth.jaas
+      - /etc/login.properties:/etc/confluent-control-center/login.properties
   
   kafka-connect:
     image: confluentinc/cp-kafka-connect:7.7.0
