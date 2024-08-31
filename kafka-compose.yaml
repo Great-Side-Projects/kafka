@@ -155,17 +155,17 @@ services:
       - -c
       - |
         echo "Installing connector plugins last version"
-        confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
+        #confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
         confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:latest
-        confluent-hub install --no-prompt confluentinc/kafka-connect-s3:latest
-        confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
-        confluent-hub install --no-prompt confluentinc/kafka-connect-azure-blob-storage:latest
-        confluent-hub install --no-prompt confluentinc/kafka-connect-gcs:latest
-        confluent-hub install --no-prompt confluentinc/kafka-connect-jms:latest
-        confluent-hub install --no-prompt confluentinc/kafka-connect-mqtt:latest
-        confluent-hub install --no-prompt confluentinc/kafka-connect-sftp:latest
-        confluent-hub install --no-prompt confluentinc/kafka-connect-syslog:latest
-        confluent-hub install --no-prompt confluentinc/kafka-connect-vertica:latest
+        #confluent-hub install --no-prompt confluentinc/kafka-connect-s3:latest
+        #confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
+        #confluent-hub install --no-prompt confluentinc/kafka-connect-azure-blob-storage:latest
+        #confluent-hub install --no-prompt confluentinc/kafka-connect-gcs:latest
+        #confluent-hub install --no-prompt confluentinc/kafka-connect-jms:latest
+        #confluent-hub install --no-prompt confluentinc/kafka-connect-mqtt:latest
+        #confluent-hub install --no-prompt confluentinc/kafka-connect-sftp:latest
+        #confluent-hub install --no-prompt confluentinc/kafka-connect-syslog:latest
+        #confluent-hub install --no-prompt confluentinc/kafka-connect-vertica:latest
         #
         echo "Launching Kafka Connect worker"
         /etc/confluent/docker/run &
