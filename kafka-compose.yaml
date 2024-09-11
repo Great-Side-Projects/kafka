@@ -55,9 +55,9 @@ services:
     container_name: kafka-ui
     depends_on:
       - kafka
-      - schema-registry
+      #- schema-registry
       - ksqldb-server
-      - kafka-connect
+      #- kafka-connect
     ports:
       - 8090:8080
     environment:
